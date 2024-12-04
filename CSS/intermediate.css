@@ -1,0 +1,126 @@
+/*https://codepen.io/SitePoint/pen/YzxKGpa*/
+
+body {
+    font-family: Courier, monospace; 
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #0a0b0c;
+    color: #e6e6e6;
+}
+
+.container {
+    text-align: center;
+}
+
+.typing{
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.line1{
+    font-size: 50px;
+    overflow: hidden;
+    width: 0;
+    border-right: 3px solid white;
+    animation: typing 1s steps(40, end) forwards, blink 0.5s step-end infinite alternate;
+    white-space: nowrap;
+}
+
+.line2{
+    font-size: 25px;
+    overflow: hidden;
+    width: 0;
+    border-right: 3px solid white;
+    animation: typing 1s steps(40, end) forwards, blink 0.5s step-end infinite alternate;
+    white-space: nowrap;
+    animation-delay: 1s;
+}
+
+.line3{
+    font-size: 25px;
+    overflow: hidden;
+    width: 0;
+    border-right: 3px solid white;
+    animation: typing 1s steps(40, end) forwards, blink 0.5s step-end infinite alternate;
+    animation-delay: 2s;
+}
+
+.line4{
+    font-size: 25px;
+    overflow: hidden;
+    width: 0;
+    border-right: 3px solid white;
+    animation: typing 1s steps(40, end) forwards, blink 0.5s step-end infinite alternate;
+    white-space: nowrap;
+    animation-delay: 3s;
+}
+
+.line5{
+    font-size: 25px;
+    overflow: hidden;
+    width: 0;
+    border-right: 3px solid white;
+    animation: typing 1s steps(40, end) forwards, blink 0.5s step-end infinite alternate;
+    white-space: nowrap;
+    animation-delay: 4s;
+}
+
+.line6{
+    font-size: 25px;
+    overflow: hidden;
+    width: 0;
+    border-right: 3px solid white;
+    animation: typing 1s steps(40, end) forwards, blink 0.5s step-end infinite alternate;
+    white-space: nowrap;
+    animation-delay: 5s;
+}
+
+@keyframes typing {
+    from {width: 0;}
+    to {width: 100%;}
+}
+
+@keyframes blink {
+    from {
+        border-right-color: transparent;
+    }
+    to {
+        border-right-color: white;
+    }
+}
+
+button.redirect-btn {
+    position: relative;
+    margin: 20px auto;
+    display: block;
+    background-color: #2b3b4d;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.redirect-btn:hover {
+    background-color: #0056b3;
+}
+
+@media screen and (max-width: 600px) {
+    .typing {
+      font-size: 1.5em;
+    }
+  }
+  
+  @media screen and (max-width: 400px) {
+    .typing {
+      font-size: 1.2em;
+    }
+  }
