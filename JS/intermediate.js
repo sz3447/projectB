@@ -1,15 +1,14 @@
 let bttn;
 function setup() {
   createCanvas(400, 400);
-  bttn = createButton ("GO TO ANOTHER PAGE");
+  bttn = createButton ("START");
   bttn.mousePressed(redirect);
   bttn.size(200, 100);
+  bttn.position(130, 150);
 
 }
 
 function draw() {
-  background(220);
-
 }
 
 function redirect(){
