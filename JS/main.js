@@ -17,83 +17,113 @@ let ArtifactImage = [];
 
 let collectitem = true;
 
+let requiredartifacts = ["Woodartifact", "Paperartifact", "Glassartifact", "Metalartifact", "Potteryartifact"]
+
+let showlastbutton = false;
+let showfinalwindow = false;
+
+
+let allitemscollected = false;
+let finalbookImage;
+
 function setup() {
   canvasHeight = windowHeight - inventoryheight; 
   let canvas = createCanvas(windowWidth, windowHeight); 
   canvas.parent("p5-canvas-container"); 
+//bg image
+BGImage = loadImage('backgroundimage.png')
+//for book image
+finalbookImage = loadImage('finalbook.png');
 
-//for player moving stuff
-  standingcharacterImg = loadImage('placeholder.jpg');
-  jumpingcharacterImg = loadImage('placeholder.jpg');
-  movingcharacterImg = loadImage('placeholder.jpg');
+//for player moving stuff replace latre (crunchy as hell)https://masterpose.itch.io/pixelduuuuudesmaker
+  standingcharacterImg = loadImage('characterstanding.png');
+  jumpingcharacterImg = loadImage('characterjumping.png');
+  movingcharacterImg = loadImage('charactermoving.png');
 
-//artifact images, placeholders for now
-  ArtifactImage['Woodartifact'] = loadImage('artifact 1.png');
-  ArtifactImage['Paperartifact'] = loadImage('artifact 2.jpg');
-  ArtifactImage['Glassartifact'] = loadImage('artifact 3.png');
-  ArtifactImage['Metalartifact'] = loadImage('artifact 4.jpg');
-  ArtifactImage['Potteryartifact'] = loadImage('artifact 5.png');
+//artifact images
+  ArtifactImage['Woodartifact'] = loadImage('woodartifact.png');
+  ArtifactImage['Paperartifact'] = loadImage('paperartifact.png');
+  ArtifactImage['Glassartifact'] = loadImage('glassartifact.png');
+  ArtifactImage['Metalartifact'] = loadImage('metalartifact.png');
+  ArtifactImage['Potteryartifact'] = loadImage('potteryartifact.png');
 
 character = new Character();
 
   let itemTypes = ["Woodartifact", "Paperartifact", "Glassartifact", "Metalartifact", "Potteryartifact"]; 
   let itemCount = itemTypes.length;
 
+  //https://editor.p5js.org/slow_izzm/sketches/m7v7d87kL ref
 
-
-  let padding = 3000 / (itemCount + 1);
+  let padding = 3000 / (itemCount + 1); //3000px total length
   for (let i = 0; i < itemCount; i++) {
-    let x = padding * (i + 1); 
-    let y = random(canvasHeight - 600, canvasHeight - 200); 
+    let x = padding * (i + 1); //even distribution so no clumping
+    let y = random(canvasHeight - 600, canvasHeight - 200); //random height generation
     let itemType = itemTypes[i]; 
     items.push(new Item(x, y, itemType)); 
   }
 }
 
 function draw() {
-  background(44,61,85);
+  background(BGImage); 
 
-  cameraOffset = constrain(character.x - width / 2, 0, 3000 - width);
-  translate(-cameraOffset, 0);
+  //camera follow and check if item list empty
+  if (!allitemscollected) {
+    cameraOffset = constrain(character.x - width / 2, 0, 3000 - width);
+    translate(-cameraOffset, 0);
 
-  for (let i = items.length - 1; i >= 0; i--) {
-    items[i].show();
-    if (collectitem && items[i].isCollected(character)) {
-      currentItem = items[i]; 
-      showNavbar = true; 
-      items.splice(i, 1); 
-      collectitem = false; 
+    for (let i = items.length - 1; i >= 0; i--) {
+      items[i].show();
+      if (collectitem && items[i].isCollected(character)) {
+        currentItem = items[i];
+        showNavbar = true;
+        items.splice(i, 1);
+        collectitem = false;
+      }
+    }
+
+    if (collectedallartifacts()) {
+      allitemscollected = true;
+      showlastbutton = true; 
+    }
+
+    character.update();
+    character.show();
+    drawInventory();
+    if (showNavbar) {
+      drawNavbar();
+    }
+    if (showinfoNavbar) {
+      drawinfoNavbar();
     }
   }
 
-  character.update();
-  character.show();
-  drawInventory();
-  if (showNavbar) {
-    drawNavbar();
+  if (showlastbutton) {
+    drawbutton();
   }
-  if (showinfoNavbar) {
-    drawinfoNavbar();
+
+  if (showfinalwindow) {
+    drawfinalwindow();
   }
 }
-
 class Character {
   constructor() {
     this.x = 100;
     this.y = canvasHeight - 30; 
-    this.w = 30;
-    this.h = 30;
+    this.w = 75;
+    this.h = 100;
     this.velocityY = 0;
     this.isOnGround = false;
     this.facingRight = true; 
   }
 
+
+  //https://stackoverflow.com/questions/64573609/up-and-down-movement-in-p5-js-and-using-wasd; https://www.toptal.com/developers/keycode/a
   update() {
-    if (keyIsDown(LEFT_ARROW)) {
+    if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) {
       this.x -= 5;
       this.facingRight = false; 
     }
-    if (keyIsDown(RIGHT_ARROW)) {
+    if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) {
       this.x += 5;
       this.facingRight = true; 
     }
@@ -112,10 +142,11 @@ class Character {
     }
   }
 
+  
   show() {
     if (this.velocityY < 0) { 
       image(jumpingcharacterImg, this.x, this.y, this.w, this.h);
-    } else if (this.isOnGround && (keyIsDown(LEFT_ARROW) || keyIsDown(RIGHT_ARROW))) { 
+    } else if (this.isOnGround && (keyIsDown(LEFT_ARROW) || keyIsDown(65) || keyIsDown(68) || keyIsDown(RIGHT_ARROW))) { 
       image(movingcharacterImg, this.x, this.y, this.w, this.h);
     } else { 
       image(standingcharacterImg, this.x, this.y, this.w, this.h);
@@ -131,8 +162,8 @@ class Item {
   constructor(x, y, type) {
     this.x = x;
     this.y = y;
-    this.w = 30;
-    this.h = 30;
+    this.w = 75;
+    this.h = 75;
     this.type = type;
   }
 
@@ -156,7 +187,7 @@ function drawInventory() {
   resetMatrix(); 
 
   //backgroiund
-  fill(50);
+  fill(16,30, 39);
   rect(0, canvasHeight, width, inventoryheight);
 
 //text
@@ -165,15 +196,16 @@ function drawInventory() {
   textAlign(LEFT, CENTER);
   text("Inventory", leftMargin / 2, canvasHeight + inventoryheight / 2); 
 
-  fill(80);
-  for (let i = 0; i < 6; i++) { 
-    let x = leftMargin + 6 + i * (inventoryslotsize + 6);
+//inventory slots
+  fill(240, 255, 255);
+  for (let i = 0; i < 5; i++) { 
+    let x = leftMargin + 5 + i * (inventoryslotsize + 5);
     let y = canvasHeight + (inventoryheight - inventoryslotsize) / 2;
     rect(x, y, inventoryslotsize, inventoryslotsize);
 
     if (i < inventory.length) {
       let itemType = inventory[i];
-      image(ArtifactImage[itemType], x + inventoryslotsize / 2 - 15, y + inventoryslotsize / 2 - 15, 30, 30);
+      image(ArtifactImage[itemType], x + inventoryslotsize / 2 - 33, y + inventoryslotsize / 2 - 33, 75, 75);
     } else {
       fill(0);
       textSize(16);
@@ -198,7 +230,7 @@ function drawNavbar() {
     fill(255);
     textSize(20);
     textAlign(CENTER, CENTER);
-    text("You have found an artifact! Choose an option.", navbarX + navbarWidth / 2, navbarY + navbarHeight / 2);
+    text("You have found an artifact! Choose an option to proceed.", navbarX + navbarWidth / 2, navbarY + navbarHeight / 2);
   
 //left button for the inventory
     fill(255);
@@ -238,6 +270,41 @@ function drawinfoNavbar() {
     text(itemDescription, width / 2, height / 2);
 }
 
+
+//checking for every itme in the inventory
+function collectedallartifacts(){
+  return requiredartifacts.every((item) => inventory.includes(item));
+}
+
+function drawbutton(){
+  resetMatrix();
+  fill(0, 0, 0, 150);
+  rect(width/2-206, height/2-30, 400, 75, 100);
+
+  //text
+  fill(255);
+  textSize(20);
+  textAlign(CENTER, CENTER);
+  text("All artifacts collected. View last item.", width/2, height/2);
+}
+
+function drawfinalwindow(){
+  resetMatrix();
+  fill(0,0,0, 180);
+  rect(width/2 - 340, height/2 -100, 700, 75, 100);
+
+  //text
+  fill(255);
+  textSize(23);
+  textAlign(CENTER,CENTER);
+  text("This item holds the answers to what you seek. Use it wisely.", width/2, height/2 - 60);
+
+  //book image
+  if (finalbookImage){
+    image(finalbookImage, width/2-200, height/2 -30, 400, 400)  ;
+  }
+}
+
 function keyPressed() {
   if (key === ' ') {
     character.jump(); //juumpy
@@ -248,16 +315,38 @@ function keyPressed() {
 //https://editor.p5js.org/juang3ac/sketches/Oa75kUDgI P5 reference
 
 function mousePressed() {
+  if (showlastbutton) {
+    if (
+      mouseX > width / 2 - 100 &&
+      mouseX < width / 2 + 100 &&
+      mouseY > height / 2 - 30 &&
+      mouseY < height / 2 + 30
+    ) {
+      showlastbutton = false;
+     showfinalwindow = true
+    }
+  }
+
   if (showNavbar) {
-    if (mouseX > 100 && mouseX < 250 && mouseY > (height - 300 + 30) && mouseY < (height - 300 + 70)) {
-      inventory.push(currentItem.type); 
-      showNavbar = false; 
-      showinfoNavbar = false; 
-      collectitem = true; 
+    if (
+      mouseX > 100 &&
+      mouseX < 250 &&
+      mouseY > height - 300 + 30 &&
+      mouseY < height - 300 + 70
+    ) {
+      inventory.push(currentItem.type);
+      showNavbar = false;
+      showinfoNavbar = false;
+      collectitem = true;
     }
 
-    if (mouseX > width - 250 && mouseX < width - 100 && mouseY > (height - 300 + 30) && mouseY < (height - 300 + 70)) {
-        showinfoNavbar = true; 
+    if (
+      mouseX > width - 250 &&
+      mouseX < width - 100 &&
+      mouseY > height - 300 + 30 &&
+      mouseY < height - 300 + 70
+    ) {
+      showinfoNavbar = true;
     }
   }
 }
