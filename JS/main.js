@@ -256,16 +256,16 @@ function drawinfoNavbar() {
     textSize(18);
     textAlign(CENTER, CENTER);
         
-    if (currentItem.type === 'Woodartifact') {
-      itemDescription = "textplaceholder for wood artifact";
+    if (currentItem.type === 'Woodartifact') {                                                                                                     // 
+      itemDescription = "Wood can be used to create many things including shelter, furniture, tools, and other objects. It's something very valuable.";
     } else if (currentItem.type === 'Glassartifact') {
-      itemDescription = "text placeolder for glass artifact";
+      itemDescription = "Glass is also very valuable. It can insulate, protect, and clarify. It can also be used to make unique sculptures.";
     } else if (currentItem.type === 'Metalartifact') {
-      itemDescription = "textplaceholder for metal artifact ";
+      itemDescription = "Metals are essential for fancy architecture, machinery, and smithing. It can also be used to make everyday objects.";
     } else if (currentItem.type === 'Potteryartifact') {
-      itemDescription = "text placeholder for pottery artifact";
+      itemDescription = "Pottery was a valuable commodity in the past, used for storing and transporting food. Now, it's used to make pretty wares.";
     } else if (currentItem.type === 'Paperartifact') {
-      itemDescription = "textplaceholder for paper artifact";
+      itemDescription = "Paper once allowed for the transcription of knowledge and spreading it across the world. Use it to jot down unique ideas.";
     }
     text(itemDescription, width / 2, height / 2);
 }
