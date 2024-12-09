@@ -3,7 +3,7 @@ function setup() {
   createCanvas(400, 400);
   bttn = createButton ("GO TO ANOTHER PAGE");
   bttn.mousePressed(redirect);
-  bttn.size(100, 50);
+  bttn.size(200, 100);
 
 }
 
