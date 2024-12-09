@@ -40,12 +40,11 @@ character = new Character();
   let itemCount = itemTypes.length;
 
 
-  //https://editor.p5js.org/slow_izzm/sketches/m7v7d87kL ref
 
-  let padding = 3000 / (itemCount + 1); //3000px total length
+  let padding = 3000 / (itemCount + 1);
   for (let i = 0; i < itemCount; i++) {
-    let x = padding * (i + 1); //even distribution so no clumping
-    let y = random(canvasHeight - 600, canvasHeight - 200); //random height generation
+    let x = padding * (i + 1); 
+    let y = random(canvasHeight - 600, canvasHeight - 200); 
     let itemType = itemTypes[i]; 
     items.push(new Item(x, y, itemType)); 
   }
@@ -63,7 +62,7 @@ function draw() {
       currentItem = items[i]; 
       showNavbar = true; 
       items.splice(i, 1); 
-      collectitem = false; //no collection until the item is collected
+      collectitem = false; 
     }
   }
 
