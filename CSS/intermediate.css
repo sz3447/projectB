@@ -95,24 +95,6 @@ body {
     }
 }
 
-button.redirect-btn {
-    position: relative;
-    margin: 20px auto;
-    display: block;
-    background-color: #2b3b4d;
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button.redirect-btn:hover {
-    background-color: #0056b3;
-}
-
 @media screen and (max-width: 600px) {
     .typing {
       font-size: 1.5em;
